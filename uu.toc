@@ -1,0 +1,11 @@
+## Interface: 110000
+## Title: uu
+## Notes: The least unitframes money can buy.
+## Version: @project-version@
+
+src\index.lua
+src\simpleResource.lua
+src\absorb.lua
+src\healAbsorb.lua
+src\chunkAnimation.lua
+src\health.lua
