@@ -6,14 +6,15 @@ local frames = private.frame
 ---@param parent Frame
 ---@return Texture
 function frames.animatedChunkFrame(parent)
-    local frame = parent:CreateTexture(parent:GetName() .. 'ChunkFrame')
+    local tex = parent:CreateTexture(parent:GetName() .. 'ChunkFrame')
+    tex:SetDrawLayer("BACKGROUND")
 
-    frame:SetAllPoints()
-    frame:SetTexture('interface/buttons/white8x8')
-    frame:SetVertexColor(1, 0.115, 0.1, 0.9)
-    frame:Hide()
+    tex:SetAllPoints()
+    tex:SetTexture('interface/buttons/white8x8')
+    tex:SetVertexColor(1, 0.115, 0.1, 0.9)
+    tex:Hide()
 
-    local chunkAnimGroup = frame:CreateAnimationGroup()
+    local chunkAnimGroup = tex:CreateAnimationGroup()
     chunkAnimGroup:SetLooping('NONE')
     local chunkAnim = chunkAnimGroup:CreateAnimation('Scale')
     chunkAnim:SetOrigin('LEFT', 0, 0)
@@ -27,7 +28,7 @@ function frames.animatedChunkFrame(parent)
     ---@param oldHp number
     ---@param newHp number
     ---@param maxHp number
-    function frame:displayChunkAnim(oldHp, newHp, maxHp)
+    function tex:displayChunkAnim(oldHp, newHp, maxHp)
         chunkAnimGroup:Stop()
         self:SetPoint('TOPLEFT', parent, 'TOPLEFT', parent:GetWidth() * newHp / maxHp, 0)
         self:SetPoint('TOPRIGHT', parent, 'TOPLEFT', parent:GetWidth() * oldHp / maxHp, 0)
@@ -36,10 +37,10 @@ function frames.animatedChunkFrame(parent)
     end
 
     chunkAnim:SetScript('OnPlay', function()
-        frame:Show()
+        tex:Show()
     end)
     chunkAnim:SetScript('OnFinished', function()
-        frame:Hide()
+        tex:Hide()
     end)
-    return frame
+    return tex
 end

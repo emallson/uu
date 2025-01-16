@@ -22,16 +22,20 @@ end
 
 
 ---@type Frame
-local frame = CreateFrame('Button', 'uu', UIParent, 'SecureUnitButtonTemplate')
-
-frame:RegisterForClicks("AnyUp")
-frame:SetAttribute("unit", "player")
-frame:SetAttribute("*type1", "target")
-frame:SetAttribute("*type2", "togglemenu")
-
+local frame = CreateFrame('Frame', 'uu', UIParent)
 frame:SetPoint("TOP", UIParent, 'CENTER', 0, -0.125 * GetScreenHeight())
 PixelUtil.SetSize(frame, 200, 8)
 frame:Show()
+
+local unitFrame = CreateFrame('Button', 'uuUnit', frame, 'SecureUnitButtonTemplate')
+
+unitFrame:RegisterForClicks("AnyUp")
+unitFrame:SetAttribute("unit", "player")
+unitFrame:SetAttribute("*type1", "target")
+unitFrame:SetAttribute("*type2", "togglemenu")
+
+unitFrame:SetAllPoints()
+
 
 local bg = frame:CreateTexture(frame:GetName() .. 'Background', 'BACKGROUND')
 bg:SetTexture('interface/buttons/white8x8')
@@ -47,6 +51,7 @@ frame:SetScript('OnEvent', function ()
     table.insert(stack, private.frame.health(frame, 'player'))
     table.insert(stack, private.frame.simpleResource(frame, 'player', 0))
     PixelUtil.SetPoint(bg, 'BOTTOMRIGHT', stack[#stack], 'BOTTOMRIGHT', 1, -1)
+    PixelUtil.SetPoint(unitFrame, 'BOTTOMRIGHT', stack[#stack], 'BOTTOMRIGHT', 1, -1)
 
     private.frame.absorb(frame, 'player', stack)
     private.frame.healAbsorb(frame, 'player', stack)
