@@ -43,18 +43,50 @@ bg:SetVertexColor(0.2, 0, 0, 1)
 PixelUtil.SetPoint(bg, 'TOPLEFT', frame, 'TOPLEFT', -1, 1)
 PixelUtil.SetPoint(bg, 'BOTTOMRIGHT', frame, 'BOTTOMRIGHT', 1, -1)
 
--- todo heal absorb frame
+local resizeHandlers = {}
+
+---@param stack table<number, Frame>
+function private.util.rescaleBg(stack)
+    local bottom = nil
+    local top = nil
+    for _, f in ipairs(stack) do
+        if f:IsShown() then
+            if top == nil then top = f end
+            bottom = f
+        end
+    end
+    PixelUtil.SetPoint(bg, 'BOTTOMRIGHT', bottom, 'BOTTOMRIGHT', 1, -1)
+    PixelUtil.SetPoint(unitFrame, 'BOTTOMRIGHT', bottom, 'BOTTOMRIGHT', 1, -1)
+
+    for _, handler in ipairs(resizeHandlers) do
+        handler(top, bottom)
+    end
+end
+
+function private.util.addResizeHandler(handler)
+    table.insert(resizeHandlers, handler)
+end
+
+
+local function addDefaultResources(stack)
+    if select(2, UnitClass("player")) == "PALADIN" then
+        table.insert(stack, private.frame.customResources.holyPower(frame, 'player'))
+        table.insert(stack, private.frame.customResources.healerOnlyMana(stack[#stack], 'player', stack))
+    else
+        table.insert(stack, private.frame.simpleResource(frame, 'player'))
+    end
+end
 
 frame:RegisterEvent('PLAYER_LOGIN')
 frame:SetScript('OnEvent', function ()
     local stack = {}
     table.insert(stack, private.frame.health(frame, 'player'))
-    table.insert(stack, private.frame.simpleResource(frame, 'player', 0))
-    PixelUtil.SetPoint(bg, 'BOTTOMRIGHT', stack[#stack], 'BOTTOMRIGHT', 1, -1)
-    PixelUtil.SetPoint(unitFrame, 'BOTTOMRIGHT', stack[#stack], 'BOTTOMRIGHT', 1, -1)
+    addDefaultResources(stack)
 
-    private.frame.absorb(frame, 'player', stack)
-    private.frame.healAbsorb(frame, 'player', stack)
+    private.frame.absorb(frame, 'player')
+    private.frame.healAbsorb(frame, 'player')
+
+    private.util.rescaleBg(stack)
 end)
 
 -- todo: target indicator (esp. friendly targets, and targets without nameplates)

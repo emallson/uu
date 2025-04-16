@@ -3,6 +3,8 @@ local private = select(2, ...)
 
 ---@class uuFrames
 local frames = private.frame
+---@class uuCustomResources
+frames.customResources = {}
 
 local resourceOverrides = {}
 resourceOverrides[Enum.PowerType.Mana] = {
@@ -13,14 +15,16 @@ resourceOverrides[Enum.PowerType.Mana] = {
 
 ---@param parent Frame
 ---@param unit UnitToken
----@param resourceIndex number
+---@param resourceType? Enum.PowerType
 ---@return StatusBar
-function frames.simpleResource(parent, unit, resourceIndex)
-    local primaryResourceFrame = CreateFrame("StatusBar", parent:GetName() .. 'Power' .. resourceIndex, parent)
+function frames.simpleResource(parent, unit, resourceType)
+    local primaryResourceFrame = CreateFrame("StatusBar", parent:GetName() .. 'Power' .. (resourceType or 'Default'),
+        parent)
     primaryResourceFrame:SetPoint('TOPLEFT', parent, 'BOTTOMLEFT', 0, -1)
     primaryResourceFrame:SetPoint('BOTTOMRIGHT', parent, 'BOTTOMRIGHT', 0, -3)
     primaryResourceFrame:SetStatusBarTexture('interface/buttons/white8x8')
-    primaryResourceFrame:SetStatusBarColor(0.9, 0.9, 0.9, 0.9)
+    local defaultColor = resourceType and (resourceOverrides[resourceType] or PowerBarColor[resourceType]) or { r = 0.9, g = 0.9, b = 0.9 }
+    primaryResourceFrame:SetStatusBarColor(defaultColor.r, defaultColor.g, defaultColor.b, 0.9)
     primaryResourceFrame:Show()
     primaryResourceFrame:SetMinMaxValues(0, 100)
     primaryResourceFrame:SetValue(100)
@@ -29,10 +33,10 @@ function frames.simpleResource(parent, unit, resourceIndex)
     primaryResourceFrame:RegisterUnitEvent('UNIT_POWER_FREQUENT', unit)
     primaryResourceFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
 
-    local lastKnownPowerType = nil
+    local lastKnownPowerType = resourceType
     primaryResourceFrame:SetScript('OnEvent', function(self, eventType)
-        if lastKnownPowerType == nil or eventType == 'UNIT_POWER_UPDATE' or eventType == 'PLAYER_ENTERING_WORLD' then
-            local newPowerType, slug, altR, altG, altB = UnitPowerType(unit, resourceIndex)
+        if resourceType == nil and (lastKnownPowerType == nil or eventType == 'UNIT_POWER_UPDATE' or eventType == 'PLAYER_ENTERING_WORLD') then
+            local newPowerType, slug, altR, altG, altB = UnitPowerType(unit, 0)
 
             if newPowerType ~= lastKnownPowerType then
                 lastKnownPowerType = newPowerType
@@ -48,6 +52,7 @@ function frames.simpleResource(parent, unit, resourceIndex)
             self:SetValue(power)
         end
     end)
+
 
     return primaryResourceFrame
 end

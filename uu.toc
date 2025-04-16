@@ -9,3 +9,5 @@ src\absorb.lua
 src\healAbsorb.lua
 src\chunkAnimation.lua
 src\health.lua
+src\resources\holyPower.lua
+src\resources\healerOnlyMana.lua

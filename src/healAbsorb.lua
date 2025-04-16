@@ -6,15 +6,16 @@ local frames = private.frame
 ---comment
 ---@param parent Frame
 ---@param unit UnitToken
----@param stack table<number, Frame>
 ---@return Frame
-function frames.healAbsorb(parent, unit, stack)
-    local top, bottom = stack[1], stack[#stack]
+function frames.healAbsorb(parent, unit)
     local absorb = CreateFrame('StatusBar', parent:GetName() .. 'HealAbsorb', parent)
     absorb:SetFrameStrata("BACKGROUND")
     absorb:SetAllPoints()
-    PixelUtil.SetPoint(absorb, 'TOPLEFT', top, 'TOPLEFT', -4, 4)
-    PixelUtil.SetPoint(absorb, 'BOTTOMRIGHT', bottom, 'BOTTOMRIGHT', 4, -4)
+
+    private.util.addResizeHandler(function(top, bottom)
+        PixelUtil.SetPoint(absorb, 'TOPLEFT', top, 'TOPLEFT', -4, 4)
+        PixelUtil.SetPoint(absorb, 'BOTTOMRIGHT', bottom, 'BOTTOMRIGHT', 4, -4)
+    end)
 
     absorb:SetStatusBarTexture('interface/buttons/white8x8')
     absorb:SetStatusBarColor(0x92 / 0xff, 0x70 / 0xff, 0xdb / 0xff, 0.9)
