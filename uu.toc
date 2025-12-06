@@ -1,4 +1,4 @@
-## Interface: 110000
+## Interface: 120000
 ## Title: uu
 ## Notes: The least unitframes money can buy.
 ## Version: @project-version@

@@ -19,12 +19,14 @@ function frames.absorb(parent, unit)
     end)
 
     absorb:SetStatusBarTexture('interface/buttons/white8x8')
-    absorb:SetStatusBarColor(255 / 255, 191 / 255, 45 / 255, 0.75)
+    absorb:SetStatusBarColor(220 / 255, 191 / 255, 45 / 255, 1)
     absorb:SetMinMaxValues(0, 100)
     absorb:SetValue(0)
     absorb:Show()
     
     absorb.animChunkFrame = frames.animatedChunkFrame(absorb)
+    absorb.animChunkFrame:SetFrameStrata('BACKGROUND')
+    absorb.animChunkFrame:SetFrameLevel(99)
 
 
     local absorbMaxHp, absorbAmount = nil, nil
@@ -48,12 +50,10 @@ function frames.absorb(parent, unit)
     
         if updateScale then
             self:SetMinMaxValues(0, absorbMaxHp)
+            self.animChunkFrame:SetMinMaxValues(0, absorbMaxHp)
         end
         self:SetValue(absorbAmount)
-    
-        if oldAbsorb and absorbMaxHp and (oldAbsorb - absorbAmount) / absorbMaxHp >= private.config.chunkAnimMin then
-            self.animChunkFrame:displayChunkAnim(oldAbsorb, absorbAmount, absorbMaxHp)
-        end
+        self.animChunkFrame:update(absorbAmount)
     end)
     
     return absorb
