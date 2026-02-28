@@ -6,7 +6,7 @@ local frames = private.frame
 ---@param parent Frame
 ---@return StatusBar
 function frames.animatedChunkFrame(parent)
-    local animFrame = CreateFrame('StatusBar', parent:GetName() .. 'ChunkFrame')
+    local animFrame = CreateFrame('StatusBar', parent:GetName() .. 'ChunkFrame', parent)
     animFrame:Show()
 
     animFrame:SetAllPoints(parent)

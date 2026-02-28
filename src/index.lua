@@ -11,16 +11,6 @@ private.config = {
 
 private.util = {}
 
-function private.util.scale(px)
-    -- 768 vertical screen units, spanning GetScreenHeight() pixel units. that means
-    -- that 1 screen unit has a size of GetScreenHeight() pixels / 768 screen units = 1 px/su / UIParent:GetEffectiveScale()
-    local pxSize = 1 / UIParent:GetEffectiveScale()
-
-    -- normally, the calculation is that we multiply by the parent scale.
-
-end
-
-
 ---@type Frame
 local frame = CreateFrame('Frame', 'uu', UIParent)
 frame:SetPoint("TOP", UIParent, 'CENTER', 0, -0.125 * GetScreenHeight())
@@ -88,6 +78,3 @@ frame:SetScript('OnEvent', function ()
 
     private.util.rescaleBg(stack)
 end)
-
--- todo: target indicator (esp. friendly targets, and targets without nameplates)
--- okay i actually just need a real target frame for now because of target buffs/debuffs
