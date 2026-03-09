@@ -11,3 +11,5 @@ src\chunkAnimation.lua
 src\health.lua
 src\resources\holyPower.lua
 src\resources\healerOnlyMana.lua
+src\resources\runeSimple.lua
+src\resources\runeWaste.lua

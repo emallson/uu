@@ -62,6 +62,9 @@ local function addDefaultResources(stack)
     if select(2, UnitClass("player")) == "PALADIN" then
         table.insert(stack, private.frame.customResources.holyPower(frame, 'player'))
         table.insert(stack, private.frame.customResources.healerOnlyMana(stack[#stack], 'player', stack))
+    elseif select(2, UnitClass("player")) == "DEATHKNIGHT" then
+        table.insert(stack, private.frame.customResources.runeWaste(frame, 'player'))
+        table.insert(stack, private.frame.simpleResource(stack[#stack], 'player'))
     else
         table.insert(stack, private.frame.simpleResource(frame, 'player'))
     end
