@@ -64,14 +64,17 @@ function custom.runeWaste(parent, unit)
 
             for i = 1, 6 do
                 local startTime, cooldownDuration, available = GetRuneCooldown(i)
-                if available then
+                if available or startTime == nil then
                     availableRunes = availableRunes + 1
                 else
                     table.insert(runeCooldowns, { startTime, cooldownDuration })
                 end
             end
+
+            if #runeCooldowns > 0 then
+                table.sort(runeCooldowns, function(a, b) return (a[1] + a[2]) < (b[1] + b[2]) end)
+            end
             
-            table.sort(runeCooldowns, function(a, b) return (a[1] + a[2]) < (b[1] + b[2]) end)
 
             neutralBar:SetRuneTimer(runeCooldowns, availableRunes)
             warningBar:SetRuneTimer(runeCooldowns, availableRunes)
