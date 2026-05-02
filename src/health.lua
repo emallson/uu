@@ -5,7 +5,10 @@ local frames = private.frame
 
 function frames.health(parent, unit)
     local hp = CreateFrame('StatusBar', parent:GetName() .. 'Health', parent)
-    hp:SetAllPoints()
+    hp:SetPoint('TOPLEFT', parent, "TOPLEFT")
+    hp:SetPoint('BOTTOMLEFT', parent, 'BOTTOMLEFT')
+    PixelUtil.SetWidth(hp, parent:GetWidth())
+
     hp:SetStatusBarTexture('interface/buttons/white8x8')
     hp:SetStatusBarColor(216 / 255, 208 / 255, 211 / 255, 1)
     hp:Show()
@@ -16,6 +19,13 @@ function frames.health(parent, unit)
     hp:RegisterUnitEvent("UNIT_HEALTH", unit)
     hp:RegisterUnitEvent("UNIT_MAXHEALTH", unit)
     hp:RegisterEvent('PLAYER_ENTERING_WORLD')
+
+    local reducedMaxHpTexture = hp:CreateTexture(nil, 'OVERLAY')
+    reducedMaxHpTexture:SetPoint('TOPLEFT', hp, 'TOPRIGHT')
+    reducedMaxHpTexture:SetPoint('BOTTOMRIGHT', parent, 'BOTTOMRIGHT')
+    reducedMaxHpTexture:Hide()
+    reducedMaxHpTexture:SetTexture('interface/buttons/white8x8')
+    reducedMaxHpTexture:SetVertexColor(0.25 * 216 / 255, 0.25 * 208 / 255, 0.25 * 211 / 255, 1)
 
     local bg = hp:CreateTexture(nil, 'BACKGROUND')
     bg:SetAllPoints()
@@ -28,7 +38,6 @@ function frames.health(parent, unit)
 
     local maxHp, currentHp = nil, nil
     hp:SetScript("OnEvent", function(self, eventType)
-        local oldHp = currentHp
         local updateScale = false
         if eventType == 'UNIT_HEALTH' or eventType == 'PLAYER_ENTERING_WORLD' then
             if maxHp == nil then
@@ -40,6 +49,16 @@ function frames.health(parent, unit)
             maxHp = UnitHealthMax(unit)
             currentHp = UnitHealth(unit)
             updateScale = true
+        end
+
+        local maxHpPctReduction = GetUnitTotalModifiedMaxHealthPercent(unit)
+        maxHpPctReduction = Clamp(maxHpPctReduction, 0, 1)
+        PixelUtil.SetWidth(self, parent:GetWidth() * (1 - maxHpPctReduction))
+
+        if maxHpPctReduction > 0 then
+            reducedMaxHpTexture:Show()
+        else
+            reducedMaxHpTexture:Hide()
         end
 
         if updateScale then
