@@ -18,6 +18,7 @@ function frames.health(parent, unit)
 
     hp:RegisterUnitEvent("UNIT_HEALTH", unit)
     hp:RegisterUnitEvent("UNIT_MAXHEALTH", unit)
+    -- TODO: do i need the max hp modifiers changed event?
     hp:RegisterEvent('PLAYER_ENTERING_WORLD')
 
     local reducedMaxHpTexture = hp:CreateTexture(nil, 'OVERLAY')

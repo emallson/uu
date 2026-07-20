@@ -4,7 +4,10 @@
         "PixelUtil",
         "PowerBarColor",
         "UIParent",
-        "Clamp"
+        "Clamp",
+        "STAGGER",
+        "STAGGER_STATES",
+        "STA"
     ],
     "Lua.runtime.version": "Lua 5.1",
     "Lua.runtime.builtin": {
