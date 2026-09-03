@@ -30,7 +30,7 @@ function custom.chargeResource(parent, unit, resourceType, resourceToken, tickMa
     frame:SetScript('OnEvent', function(self, eventName, target, powerType)
         if eventName == 'PLAYER_SPECIALIZATION_CHANGED' then
             checkVisibility()
-        elseif eventName == 'UNIT_MAXPOWER' then
+        elseif eventName == 'UNIT_MAXPOWER' and not InCombatLockdown() then
             if powerType == resourceToken then
                 local max = UnitPowerMax(unit, resourceType)
                 local left = tickMarkCount / max * interior:GetWidth()

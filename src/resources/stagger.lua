@@ -6,7 +6,7 @@ local custom = private.frame.customResources
 
 local FIXED_COLORS = {
     [2] = { r = 0.7, g = 0, b = 0.95, a = 1},
-    [3] = { r = 0, g = 0, b = 0, a = 1 }
+    [3] = { r = 38 / 255, g = 183 / 255, b = 187 / 255, a = 1 }
 }
 
 function custom.stagger(parent, unit, stack)

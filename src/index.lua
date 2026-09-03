@@ -37,6 +37,9 @@ local resizeHandlers = {}
 
 ---@param stack table<number, Frame>
 function private.util.rescaleBg(stack)
+    if InCombatLockdown() then
+        return -- TODO defer this
+    end
     local bottom = nil
     local top = nil
     for _, f in ipairs(stack) do
